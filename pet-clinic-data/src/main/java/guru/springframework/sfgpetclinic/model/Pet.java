@@ -31,4 +31,15 @@ public class Pet extends NamedEntity {
     public void setOwner(Owner owner) {
         this.owner = owner;
     }
+
+    @Override
+    public String toString() {
+        return "Pet{" +
+                "id=" + this.getId() +
+                ", name=" + this.getName() +
+                ", birthDate=" + birthDate +
+                ", petType=" + petType.toString() +
+                ", owner=" + owner.toString() +
+                '}';
+    }
 }

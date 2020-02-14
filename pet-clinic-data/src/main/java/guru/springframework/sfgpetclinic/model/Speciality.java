@@ -1,13 +1,12 @@
 package guru.springframework.sfgpetclinic.model;
 
-public class Speciality extends BaseEntity {
-    private String description;
+public class Speciality extends NamedEntity {
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    @Override
+    public String toString() {
+        return "Speciality{" +
+                "id=" + this.getId() +
+                ", name=" + this.getName() +
+                '}';
     }
 }

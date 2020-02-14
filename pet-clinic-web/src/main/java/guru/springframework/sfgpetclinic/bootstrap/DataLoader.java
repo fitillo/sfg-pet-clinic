@@ -1,9 +1,6 @@
 package guru.springframework.sfgpetclinic.bootstrap;
 
-import guru.springframework.sfgpetclinic.model.Owner;
-import guru.springframework.sfgpetclinic.model.Pet;
-import guru.springframework.sfgpetclinic.model.PetType;
-import guru.springframework.sfgpetclinic.model.Vet;
+import guru.springframework.sfgpetclinic.model.*;
 import guru.springframework.sfgpetclinic.services.OwnerService;
 import guru.springframework.sfgpetclinic.services.PetService;
 import guru.springframework.sfgpetclinic.services.PetTypeService;
@@ -31,6 +28,45 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        if (petTypeService.findAll().isEmpty()) {
+            loadData();
+        }
+    }
+
+    private void loadData() {
+        loadPetsAndOwners();
+
+        loadVetsAndSpecialities();
+    }
+
+    private void loadVetsAndSpecialities() {
+        Speciality radiology = new Speciality();
+        radiology.setName("radiology");
+        Speciality surgery = new Speciality();
+        surgery.setName("surgery");
+
+        Vet vet1 = new Vet();
+        vet1.setFirstName("Mike");
+        vet1.setLastName("Conley");
+        vet1.getSpecialities().add(radiology);
+
+        Vet vet2 = new Vet();
+        vet2.setFirstName("Rudy");
+        vet2.setLastName("Gobert");
+        vet2.getSpecialities().add(surgery);
+        vet2.getSpecialities().add(radiology);
+
+        vetService.save(vet1);
+        vetService.save(vet2);
+        System.out.println("Loaded Vets and specialities...............................");
+        System.out.println("Vets specialities are: ");
+        vetService.findAll().forEach(vet -> {
+            System.out.println(vet.toString());
+            vet.getSpecialities().forEach(speciality -> System.out.println(speciality.getName()));
+        });
+    }
+
+    private void loadPetsAndOwners() {
         PetType dogs = new PetType();
         dogs.setName("dog");
         PetType cats = new PetType();
@@ -70,22 +106,23 @@ public class DataLoader implements CommandLineRunner {
         bojansCat.setBirthDate(LocalDate.now());
         bojansCat.setPetType(cats);
         bojansCat.setOwner(owner2);
+
+        Pet bojansFish = new Pet();
+        bojansFish.setName("Nemo");
+        bojansFish.setBirthDate(LocalDate.parse("01/01/2020", dtf));
+        bojansFish.setPetType(fishes);
+        bojansFish.setOwner(owner2);
+
         owner2.getPets().add(bojansCat);
+        owner2.getPets().add(bojansFish);
 
         ownerService.save(owner1);
         ownerService.save(owner2);
         System.out.println("Loaded Owners and pets...............................");
-
-        Vet vet1 = new Vet();
-        vet1.setFirstName("Mike");
-        vet1.setLastName("Conley");
-
-        Vet vet2 = new Vet();
-        vet2.setFirstName("Rudy");
-        vet2.setLastName("Gobert");
-
-        vetService.save(vet1);
-        vetService.save(vet2);
-        System.out.println("Loaded Vets...............................");
+        System.out.println("Owners pets are:");
+        ownerService.findAll().forEach(owner -> {
+            System.out.println(owner.toString());
+            owner.getPets().forEach(pet -> System.out.println(pet.toString()));
+        });
     }
 }
