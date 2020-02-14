@@ -1,6 +1,7 @@
 package guru.springframework.sfgpetclinic.bootstrap;
 
 import guru.springframework.sfgpetclinic.model.Owner;
+import guru.springframework.sfgpetclinic.model.Pet;
 import guru.springframework.sfgpetclinic.model.PetType;
 import guru.springframework.sfgpetclinic.model.Vet;
 import guru.springframework.sfgpetclinic.services.OwnerService;
@@ -9,6 +10,9 @@ import guru.springframework.sfgpetclinic.services.PetTypeService;
 import guru.springframework.sfgpetclinic.services.VetService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -27,19 +31,6 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        addOwners();
-        System.out.println("Loaded Owners....");
-
-        addVets();
-        System.out.println("Loaded Vets....");
-
-        addPetTypes();
-        System.out.println("Loaded pet types....");
-        System.out.println("Types of pets are: ");
-        petTypeService.findAll().forEach(petType -> System.out.println(petType.getName()));
-    }
-
-    private void addPetTypes() {
         PetType dogs = new PetType();
         dogs.setName("dog");
         PetType cats = new PetType();
@@ -47,12 +38,44 @@ public class DataLoader implements CommandLineRunner {
         PetType fishes = new PetType();
         fishes.setName("fish");
 
-        petTypeService.save(dogs);
-        petTypeService.save(cats);
-        petTypeService.save(fishes);
-    }
+        dogs = petTypeService.save(dogs);
+        cats = petTypeService.save(cats);
+        fishes = petTypeService.save(fishes);
+        System.out.println("Loaded pet types........................");
 
-    private void addVets() {
+        Owner owner1 = new Owner();
+        owner1.setFirstName("Joe");
+        owner1.setLastName("Ingles");
+        owner1.setAddress("Joe's Home");
+        owner1.setCity("J Salt Lake City");
+        owner1.setTelephone("Joe's phone");
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d/MM/yyyy");
+        Pet joesDog = new Pet();
+        joesDog.setName("Pepito");
+        joesDog.setBirthDate(LocalDate.parse("01/02/2020", dtf));
+        joesDog.setPetType(dogs);
+        joesDog.setOwner(owner1);
+        owner1.getPets().add(joesDog);
+
+        Owner owner2 = new Owner();
+        owner2.setFirstName("Bojan");
+        owner2.setLastName("Bogdanović");
+        owner2.setAddress("Bojan's Home");
+        owner2.setCity("B Salt Lake City");
+        owner2.setTelephone("Bojan's phone");
+
+        Pet bojansCat = new Pet();
+        bojansCat.setName("Juanito");
+        bojansCat.setBirthDate(LocalDate.now());
+        bojansCat.setPetType(cats);
+        bojansCat.setOwner(owner2);
+        owner2.getPets().add(bojansCat);
+
+        ownerService.save(owner1);
+        ownerService.save(owner2);
+        System.out.println("Loaded Owners and pets...............................");
+
         Vet vet1 = new Vet();
         vet1.setFirstName("Mike");
         vet1.setLastName("Conley");
@@ -63,18 +86,6 @@ public class DataLoader implements CommandLineRunner {
 
         vetService.save(vet1);
         vetService.save(vet2);
-    }
-
-    private void addOwners() {
-        Owner owner1 = new Owner();
-        owner1.setFirstName("Joe");
-        owner1.setLastName("Ingles");
-
-        Owner owner2 = new Owner();
-        owner2.setFirstName("Bojan");
-        owner2.setLastName("Bogdanović");
-
-        ownerService.save(owner1);
-        ownerService.save(owner2);
+        System.out.println("Loaded Vets...............................");
     }
 }
