@@ -22,7 +22,6 @@ public class Vet extends Person {
     }
 
     public boolean addSpeciality(Speciality speciality) {
-        speciality.addVet(this);
         return this.specialities.add(speciality);
     }
 
