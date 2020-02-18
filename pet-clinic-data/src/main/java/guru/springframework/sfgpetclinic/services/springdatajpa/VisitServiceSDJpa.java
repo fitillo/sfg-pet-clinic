@@ -43,6 +43,6 @@ public class VisitServiceSDJpa implements VisitService {
 
     @Override
     public void deleteById(Long id) {
-        this.deleteById(id);
+        this.visitRepository.deleteById(id);
     }
 }

@@ -33,16 +33,16 @@ public class SpecialityServiceSDJpa implements SpecialityService {
 
     @Override
     public Speciality save(Speciality speciality) {
-        return this.save(speciality);
+        return this.specialityRepository.save(speciality);
     }
 
     @Override
     public void delete(Speciality speciality) {
-        this.delete(speciality);
+        this.specialityRepository.delete(speciality);
     }
 
     @Override
     public void deleteById(Long id) {
-        this.deleteById(id);
+        this.specialityRepository.deleteById(id);
     }
 }
