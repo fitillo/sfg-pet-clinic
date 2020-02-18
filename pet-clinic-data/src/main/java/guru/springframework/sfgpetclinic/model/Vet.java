@@ -14,6 +14,9 @@ public class Vet extends Person {
         inverseJoinColumns = @JoinColumn(name = "speciality_id"))
     private Set<Speciality> specialities = new HashSet<>();
 
+    @OneToMany(mappedBy = "vet", cascade = CascadeType.ALL)
+    private Set<Visit> visits = new HashSet<>();
+
     public Set<Speciality> getSpecialities() {
         return specialities;
     }
@@ -25,5 +28,13 @@ public class Vet extends Person {
 
     public void setSpecialities(Set<Speciality> specialities) {
         this.specialities = specialities;
+    }
+
+    public Set<Visit> getVisits() {
+        return visits;
+    }
+
+    public void setVisits(Set<Visit> visits) {
+        this.visits = visits;
     }
 }
