@@ -45,39 +45,21 @@ public class DataLoader implements CommandLineRunner {
         fishes = petTypeService.save(fishes);
         System.out.println("Loaded pet types........................");
 
-        Owner joe = new Owner();
-        joe.setFirstName("Joe");
-        joe.setLastName("Ingles");
-        joe.setAddress("Joe's Home");
-        joe.setCity("J Salt Lake City");
-        joe.setTelephone("Joe's phone");
+        Owner joe = Owner.builder().firstName("Joe").lastName("Ingles").address("Joe's Home").city("J Salt Lake City").
+                telephone("Joe's phone").build();
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("d/MM/yyyy");
-        Pet joesDog = new Pet();
-        joesDog.setName("Poochie");
-        joesDog.setBirthDate(LocalDate.parse("01/02/2020", dtf));
-        joesDog.setPetType(dogs);
-        joesDog.setOwner(joe);
+        Pet joesDog = Pet.builder().name("Poochie").birthDate(LocalDate.parse("01/02/2020", dtf))
+                .petType(dogs).owner(joe).build();
         joe.getPets().add(joesDog);
 
-        Owner bojan = new Owner();
-        bojan.setFirstName("Bojan");
-        bojan.setLastName("Bogdanović");
-        bojan.setAddress("Bojan's Home");
-        bojan.setCity("B Salt Lake City");
-        bojan.setTelephone("Bojan's phone");
+        Owner bojan = Owner.builder().firstName("Bojan").lastName("Bogdanović").address("Bojan's Home")
+                .city("B Salt Lake City").telephone("Bojan's phone").build();
 
-        Pet bojansCat = new Pet();
-        bojansCat.setName("Snowball");
-        bojansCat.setBirthDate(LocalDate.now());
-        bojansCat.setPetType(cats);
-        bojansCat.setOwner(bojan);
+        Pet bojansCat = Pet.builder().name("Snowball").birthDate(LocalDate.now()).petType(cats).owner(bojan).build();
 
-        Pet bojansFish = new Pet();
-        bojansFish.setName("Nemo");
-        bojansFish.setBirthDate(LocalDate.parse("01/01/2020", dtf));
-        bojansFish.setPetType(fishes);
-        bojansFish.setOwner(bojan);
+        Pet bojansFish = Pet.builder().name("Nemo").birthDate(LocalDate.parse("01/01/2020", dtf))
+                .petType(fishes).owner(bojan).build();
 
         bojan.getPets().add(bojansCat);
         bojan.getPets().add(bojansFish);
@@ -99,21 +81,17 @@ public class DataLoader implements CommandLineRunner {
         specialityService.save(radiology);
         specialityService.save(surgery);
 
-        Vet mike = new Vet();
-        mike.setFirstName("Mike");
-        mike.setLastName("Conley");
+        Vet mike = Vet.builder().firstName("Mike").lastName("Conley").build();
         mike.getSpecialities().add(radiology);
 
-        Vet rudy = new Vet();
-        rudy.setFirstName("Rudy");
-        rudy.setLastName("Gobert");
+        Vet rudy = Vet.builder().firstName("Rudy").lastName("Gobert").build();
         rudy.getSpecialities().add(surgery);
         rudy.getSpecialities().add(radiology);
 
         vetService.save(mike);
         vetService.save(rudy);
         System.out.println("Loaded Vets and specialities...............................");
-        System.out.println("Vets specialities are: ");
+        System.out.println("Vets and its specialities are: ");
         vetService.findAll().forEach(vet -> {
             System.out.println(vet.toString());
             vet.getSpecialities().forEach(speciality -> System.out.println(speciality.getName()));
@@ -125,17 +103,11 @@ public class DataLoader implements CommandLineRunner {
         visit.setPet(joesDog);
         visit.setVet(mike);
 
-        Visit visit1 = new Visit();
-        visit1.setDate(LocalDate.now());
-        visit1.setDescription("Bojan's cat vaccines");
-        visit1.setPet(bojansCat);
-        visit1.setVet(mike);
+        Visit visit1 = Visit.builder().date(LocalDate.now()).description("Bojan's cat vaccines")
+                .pet(bojansCat).vet(mike).build();
 
-        Visit visit2 = new Visit();
-        visit2.setDate(LocalDate.now());
-        visit2.setDescription("Bojan's fish surgery");
-        visit2.setPet(bojansFish);
-        visit2.setVet(rudy);
+        Visit visit2 = Visit.builder().date(LocalDate.now()).description("Bojan's fish surgery")
+                .pet(bojansFish).vet(rudy).build();
 
         visitService.save(visit);
         visitService.save(visit1);
