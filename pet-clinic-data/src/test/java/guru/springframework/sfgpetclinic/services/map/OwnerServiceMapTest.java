@@ -12,11 +12,11 @@ class OwnerServiceMapTest {
 
     private OwnerServiceMap ownerService;
     private Owner joe;
-    private final long joeId = 1L;
-    private final String joeName = "Joe";
+    private static final long JOE_ID = 1L;
+    private static final String JOE_NAME = "Joe";
     private Owner bojan;
-    private final long bojanId = 2L;
-    private final String bojanName = "Bojan";
+    private static final long BOJAN_ID = 2L;
+    private static final String BOJAN_NAME = "Bojan";
 
     @BeforeEach
     void setUp() {
@@ -24,11 +24,9 @@ class OwnerServiceMapTest {
     }
 
     private void loadOwners() {
-
-
-        this.joe = Owner.builder().id(joeId).firstName(joeName).lastName("Ingles").address("Joe's Home").city("J Salt Lake City").
+        this.joe = Owner.builder().id(JOE_ID).firstName(JOE_NAME).lastName("Ingles").address("Joe's Home").city("J Salt Lake City").
                 telephone("Joe's phone").build();
-        this.bojan = Owner.builder().id(bojanId).firstName(bojanName).lastName("Bogdanović").address("Bojan's Home")
+        this.bojan = Owner.builder().id(BOJAN_ID).firstName(BOJAN_NAME).lastName("Bogdanović").address("Bojan's Home")
                 .city("B Salt Lake City").telephone("Bojan's phone").build();
         ownerService.save(this.joe);
         ownerService.save(this.bojan);
@@ -48,9 +46,9 @@ class OwnerServiceMapTest {
     @Test
     void deleteById() {
         loadOwners();
-        ownerService.deleteById(joeId);
+        ownerService.deleteById(JOE_ID);
         assertEquals(1, ownerService.findAll().size());
-        ownerService.deleteById(bojanId);
+        ownerService.deleteById(BOJAN_ID);
         assertEquals(0, ownerService.findAll().size());
     }
 
@@ -67,15 +65,15 @@ class OwnerServiceMapTest {
     void save() {
         assertNull(ownerService.save(null));
 
-        assertEquals(1L, ownerService.save(Owner.builder().firstName(joeName).build()).getId());
+        assertEquals(1L, ownerService.save(Owner.builder().firstName(JOE_NAME).build()).getId());
         assertEquals(1, ownerService.map.size());
     }
 
     @Test
     void findById() {
         loadOwners();
-        assertEquals(joeName, ownerService.findById(joeId).getFirstName());
-        assertEquals(bojanName, ownerService.findById(bojanId).getFirstName());
+        assertEquals(JOE_NAME, ownerService.findById(JOE_ID).getFirstName());
+        assertEquals(BOJAN_NAME, ownerService.findById(BOJAN_ID).getFirstName());
     }
 
     @Test
