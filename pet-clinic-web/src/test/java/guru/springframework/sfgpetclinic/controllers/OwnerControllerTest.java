@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -23,6 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 class OwnerControllerTest {
 
+    public static final long ID_1 = 1L;
+    public static final long ID_2 = 2L;
     @InjectMocks
     OwnerController controller;
 
@@ -39,11 +41,11 @@ class OwnerControllerTest {
     }
 
     @Test
-    void mockMVCListOwnersAllPaths() throws Exception {
+    void testListOwners() throws Exception {
         List<String> paths = Arrays.asList("/owners","/owners/");
         var owners = new HashSet<Owner>();
-        owners.add(Owner.builder().id(1L).build());
-        owners.add(Owner.builder().id(2L).build());
+        owners.add(Owner.builder().id(ID_1).build());
+        owners.add(Owner.builder().id(ID_2).build());
 
         when(service.findAll()).thenReturn(owners);
 
@@ -58,7 +60,17 @@ class OwnerControllerTest {
     }
 
     @Test
-    void mockMVCFindOwners() throws Exception {
+    void testShowOwner() throws Exception {
+        when(service.findById(anyLong())).thenReturn(Owner.builder().id(ID_1).build());
+        mvc.perform(get("/owners/"+ ID_1))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("owner", hasProperty("id", is(ID_1))))
+                .andExpect(view().name("owners/ownerDetails"));
+        verify(service).findById(anyLong());
+    }
+
+    @Test
+    void testFindOwners() throws Exception {
         List<String> paths = Arrays.asList("/find","/find.html");
         for (String path : paths) {
             mvc.perform(get("/owners" + path))

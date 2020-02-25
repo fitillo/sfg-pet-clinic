@@ -9,9 +9,6 @@ public class PetType extends NamedEntity {
 
     @Override
     public String toString() {
-        return "PetType{" +
-                "id='" + this.getId() + '\'' +
-                ", name='" + this.getName() + '\'' +
-                '}';
+        return this.getName();
     }
 }
