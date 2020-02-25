@@ -26,7 +26,7 @@ public class DataLoader implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         if (petTypeService.findAll().isEmpty()) {
             loadData();
         }
@@ -53,6 +53,12 @@ public class DataLoader implements CommandLineRunner {
                 .petType(dogs).owner(joe).build();
         joe.getPets().add(joesDog);
 
+        Owner joey = Owner.builder().firstName("joey").lastName("Ingles").address("Joey's Home").city("J Salt Lake City").
+                telephone("Joey's phone").build();
+        Pet joeysDog = Pet.builder().name("Lassie").birthDate(LocalDate.parse("01/02/2019", dtf))
+                .petType(dogs).owner(joey).build();
+        joey.getPets().add(joeysDog);
+
         Owner bojan = Owner.builder().firstName("Bojan").lastName("Bogdanović").address("Bojan's Home")
                 .city("B Salt Lake City").telephone("Bojan's phone").build();
 
@@ -65,6 +71,7 @@ public class DataLoader implements CommandLineRunner {
         bojan.getPets().add(bojansFish);
 
         ownerService.save(joe);
+        ownerService.save(joey);
         ownerService.save(bojan);
         System.out.println("Loaded Owners and pets...............................");
         System.out.println("Owners pets are:");

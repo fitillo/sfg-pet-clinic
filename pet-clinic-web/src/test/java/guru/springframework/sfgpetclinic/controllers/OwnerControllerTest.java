@@ -2,6 +2,7 @@ package guru.springframework.sfgpetclinic.controllers;
 
 import guru.springframework.sfgpetclinic.model.Owner;
 import guru.springframework.sfgpetclinic.services.OwnerService;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,9 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -33,30 +32,33 @@ class OwnerControllerTest {
 
     MockMvc mvc;
 
+    Set<Owner> owners;
+
     @BeforeEach
     void setUp() {
         //Using @InjectMocks
         //controller = new OwnerController(service);
         mvc = MockMvcBuilders.standaloneSetup(controller).build();
+        owners = new HashSet<>();
+        owners.add(Owner.builder().id(ID_1).build());
+        owners.add(Owner.builder().id(ID_2).build());
+
     }
 
     @Test
     void testListOwners() throws Exception {
-        List<String> paths = Arrays.asList("/owners","/owners/");
-        var owners = new HashSet<Owner>();
-        owners.add(Owner.builder().id(ID_1).build());
-        owners.add(Owner.builder().id(ID_2).build());
+        List<String> paths = Arrays.asList("/owners/list");
 
         when(service.findAll()).thenReturn(owners);
 
         for (String path : paths) {
             mvc.perform(get(path))
                     .andExpect(status().isOk())
-                    .andExpect(view().name("owners/index"))
-                    .andExpect(model().attributeExists("owners"))
-                    .andExpect(model().attribute("owners", hasSize(2)));
+                    .andExpect(view().name("owners/ownersList"))
+                    .andExpect(model().attributeExists("selections"))
+                    .andExpect(model().attribute("selections", hasSize(2)));
         }
-        verify(service, times(2)).findAll();
+        verify(service, times(1)).findAll();
     }
 
     @Test
@@ -75,9 +77,53 @@ class OwnerControllerTest {
         for (String path : paths) {
             mvc.perform(get("/owners" + path))
                     .andExpect(status().isOk())
-                    .andExpect(view().name("notimplemented"));
+                    .andExpect(model().attribute("owner", Matchers.any(Owner.class)))
+                    .andExpect(view().name("owners/findOwners"));
         }
 
         verifyNoInteractions(service);
+    }
+
+    @Test
+    void processFindFormReturnNone() throws Exception {
+        //given
+
+        //when
+        when(service.findAllByLastNameLike(anyString())).thenReturn(Collections.emptyList());
+
+        //then
+        mvc.perform(get("/owners"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/findOwners"));
+        verify(service).findAllByLastNameLike(anyString());
+    }
+
+    @Test
+    void processFindFormReturnMany() throws Exception {
+        //given
+
+        //when
+        when(service.findAllByLastNameLike(anyString())).thenReturn(new ArrayList<>(owners));
+
+        //then
+        mvc.perform(get("/owners"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("owners/ownersList"))
+                .andExpect(model().attribute("selections", hasSize(2)));
+        verify(service).findAllByLastNameLike(anyString());
+    }
+
+    @Test
+    void processFindFormReturnOne() throws Exception {
+        //given
+
+        //when
+        when(service.findAllByLastNameLike(anyString())).thenReturn(Collections.singletonList(Owner.builder().id(ID_1).build()));
+
+        //then
+        mvc.perform(get("/owners"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/owners/"+ID_1));
+        verify(service).findAllByLastNameLike(anyString());
     }
 }
