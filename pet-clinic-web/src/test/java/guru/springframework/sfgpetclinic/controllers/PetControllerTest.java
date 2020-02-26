@@ -92,7 +92,6 @@ class PetControllerTest {
         owner.addPet(dog);
         when(petTypeService.findAll()).thenReturn(petTypes);
         when(ownerService.findById(ID_1)).thenReturn(owner);
-        when(ownerService.save(any())).thenReturn(owner);
         mockMvc.perform(post("/owners/"+ID_1+"/pets/new"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/owners/"+owner.getId()))
@@ -100,10 +99,9 @@ class PetControllerTest {
                 .andExpect(model().attribute("types", hasSize(2)))
                 .andExpect(model().attributeExists("owner"));
 
-        verifyNoInteractions(petService);
         verify(petTypeService).findAll();
         verify(ownerService).findById(ID_1);
-        verify(ownerService).save(any());
+        verify(petService).save(any());
     }
 
     @Test
@@ -116,7 +114,7 @@ class PetControllerTest {
                 .andExpect(model().attribute("owner", hasProperty("id", is(ID_1))))
                 .andExpect(model().attribute("types", hasSize(2)));
 
-        verifyNoInteractions(petService);
+        verify(petService).findById(anyLong());
         verify(petTypeService).findAll();
         verify(ownerService).findById(ID_1);
     }
@@ -127,7 +125,6 @@ class PetControllerTest {
         owner.addPet(dog);
         when(petTypeService.findAll()).thenReturn(petTypes);
         when(ownerService.findById(ID_1)).thenReturn(owner);
-        when(ownerService.save(any())).thenReturn(owner);
         mockMvc.perform(post("/owners/"+ID_1+"/pets/"+ID_1+"/edit"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/owners/"+owner.getId()))
@@ -135,9 +132,8 @@ class PetControllerTest {
                 .andExpect(model().attribute("types", hasSize(2)))
                 .andExpect(model().attributeExists("owner"));
 
-        verifyNoInteractions(petService);
         verify(petTypeService).findAll();
         verify(ownerService).findById(ID_1);
-        verify(ownerService).save(any());
+        verify(petService).save(any());
     }
 }
