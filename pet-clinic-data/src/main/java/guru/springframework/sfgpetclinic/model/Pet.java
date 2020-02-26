@@ -29,14 +29,17 @@ public class Pet extends NamedEntity {
     private Owner owner;
 
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL)
-    private final Set<Visit> visits = new HashSet<>();
+    private Set<Visit> visits = new HashSet<>();
 
     @Builder
-    public Pet(Long id, String name, LocalDate birthDate, PetType petType, Owner owner) {
+    public Pet(Long id, String name, LocalDate birthDate, PetType petType, Owner owner, Set<Visit> visits) {
         super(id, name);
         this.birthDate = birthDate;
         this.petType = petType;
         this.owner = owner;
+        if (visits != null) {
+            this.visits = visits;
+        }
     }
 
     @Override
@@ -48,5 +51,14 @@ public class Pet extends NamedEntity {
                 ((petType != null ) ? ", petType=" + petType.toString() : "") +
                 ", owner=" + owner.toString() +
                 '}';
+    }
+
+    public Visit addVisit(Visit visit) {
+        if (visit != null) {
+            this.visits.add(visit);
+            visit.setPet(this);
+        }
+
+        return visit;
     }
 }
