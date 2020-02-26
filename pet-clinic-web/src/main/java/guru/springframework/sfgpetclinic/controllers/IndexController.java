@@ -11,8 +11,8 @@ public class IndexController {
         return "index";
     }
 
-    @GetMapping({"/oups"})
-    String findOwners() {
+    @GetMapping({"/oups", "/error"})
+    String oups() {
         return "notimplemented";
     }
 }

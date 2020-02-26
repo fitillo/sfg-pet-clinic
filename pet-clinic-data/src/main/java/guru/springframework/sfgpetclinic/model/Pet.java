@@ -45,7 +45,7 @@ public class Pet extends NamedEntity {
                 "id=" + this.getId() +
                 ", name=" + this.getName() +
                 ", birthDate=" + birthDate +
-                ", petType=" + petType.toString() +
+                ((petType != null ) ? ", petType=" + petType.toString() : "") +
                 ", owner=" + owner.toString() +
                 '}';
     }
