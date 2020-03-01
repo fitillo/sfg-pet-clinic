@@ -6,6 +6,7 @@
 </head>
 <body>
 <!--/*@thymesVar id="vet" type="guru.springframework.sfgpetclinic.model.Vet"*/-->
+<!--/*@thymesVar id="specialty" type="guru.springframework.sfgpetclinic.model.Speciality"*/-->
 <h2>Veterinarians</h2>
 
 <table id="vets" class="table table-striped">
@@ -19,7 +20,7 @@
     <tr th:each="vet : ${vets}">
         <td th:text="${vet.firstName + ' ' + vet.lastName}"></td>
         <td><span th:each="specialty : ${vet.specialities}"
-                  th:text="${specialty.description + ' '}" /> <span
+                  th:text="${specialty.name + ' '}" /> <span
                 th:if="${vet?.specialities?.size() == 0}">none</span></td>
     </tr>
     </tbody>
