@@ -25,16 +25,11 @@ public class Visit extends BaseEntity {
     @JoinColumn(name = "pet_id")
     private Pet pet;
 
-    @ManyToOne
-    @JoinColumn(name = "vet_id")
-    private Vet vet;
-
     @Builder
-    public Visit(Long id, LocalDate date, String description, Pet pet, Vet vet) {
+    public Visit(Long id, LocalDate date, String description, Pet pet) {
         super(id);
         this.date = date;
         this.description = description;
         this.pet = pet;
-        this.vet = vet;
     }
 }

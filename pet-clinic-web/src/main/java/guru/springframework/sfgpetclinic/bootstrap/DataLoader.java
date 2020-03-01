@@ -108,13 +108,12 @@ public class DataLoader implements CommandLineRunner {
         visit.setDate(LocalDate.now());
         visit.setDescription("Joe's dog revision");
         visit.setPet(joesDog);
-        visit.setVet(mike);
 
         Visit visit1 = Visit.builder().date(LocalDate.now()).description("Bojan's cat vaccines")
-                .pet(bojansCat).vet(mike).build();
+                .pet(bojansCat).build();
 
         Visit visit2 = Visit.builder().date(LocalDate.now()).description("Bojan's fish surgery")
-                .pet(bojansFish).vet(rudy).build();
+                .pet(bojansFish).build();
 
         visitService.save(visit);
         visitService.save(visit1);
